@@ -1,0 +1,59 @@
+schema {
+	# Root query type
+	query: Query
+
+	# Root mutation type
+	mutation: Mutation
+}
+
+type Query {
+
+}
+
+type Mutation {
+
+}
+
+type Shop {
+	products: [Product!]!
+	orders: [Order!]!
+}
+
+type Product {
+	linesInOrders: [LineItem!]!
+	price: DollarValue
+}
+
+type Order {
+	lines: [LineItem!]!
+	price: DollarValue
+}
+
+# Corresponds to 'one row' of an Order.
+# E.g. Buying a loaf of bread and a carton of milk may result in an order
+# with two line items:
+#   '1x loaf of bread - $3.00' and
+#   '1x carton of milk - $2.00'
+type LineItem {
+	# The corresponding product of the line item
+	# Can be unioned with a Service type for shipping etc.
+	product: Product
+	
+	# Maybe support weighted items? For now we have to encapsulate that 
+	# inside the product itself (1 lb pack of strawberries)
+	quantity: Int
+	
+	# Total price of this line
+	price: DollarValue
+}
+
+# The client should not do any calculations with the actual amount and
+# Therefore a String value only for display purposes will suffice.
+# Nevertheless separating out the DollarValue is worth any complications
+# caused by needing the value in the client later on. (payment services,
+# third party client side integrations, another server with business logic
+# using this api etc.)
+type DollarValue {
+	# The amount plus (maybe) the currency for showing to the client
+	display: String
+}
