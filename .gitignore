@@ -1,0 +1,4 @@
+# vim swap files
+*.sw[po]
+NetrwTreeListing*
+/shopapi
