@@ -2,3 +2,4 @@
 *.sw[po]
 NetrwTreeListing*
 /shopapi
+/api/graphql/bindata.go
