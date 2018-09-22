@@ -30,7 +30,7 @@ type Mutation {
 
 	createOrderInShop(shopID: ID!): Order!
 
-	addProductToOrder(shopID: ID!, productID: ID!, howMany: Int! = 1): LineItem!
+	addProductToOrder(orderID: ID!, productID: ID!, howMany: Int! = 1): LineItem!
 }
 
 type Shop {

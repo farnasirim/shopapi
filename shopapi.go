@@ -29,6 +29,7 @@ type LineItem interface {
 	Quantity() int
 	Price() DollarValue
 	ProductID() string
+	OrderID() string
 	ProductName() string
 }
 type DollarValue interface {
@@ -44,6 +45,11 @@ type DataService interface {
 	ProductByID(id string) Product
 
 	ShopOrderByID(shopID, orderID string) Order
+
+	NewShop(name string) Shop
+	CreateProductInShop(shopID, productName string, dollars, cents int) Product
+	CreateOrderInShop(shopID string) Order
+	AddProductToOrder(orderID, productID string, howMany int) LineItem
 }
 
 var (

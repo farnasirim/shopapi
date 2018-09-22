@@ -11,7 +11,9 @@ type createShopParams struct {
 }
 
 func (r *RootResolver) CreateShop(ctx context.Context, params createShopParams) (*Shop, error) {
-	return nil, nil
+	dataService := dataServiceFromContext(ctx)
+	shopModel := dataService.NewShop(params.Name)
+	return shopModelToGraphQL(dataService, shopModel), nil
 }
 
 type createProductInShopParams struct {
@@ -22,7 +24,9 @@ type createProductInShopParams struct {
 }
 
 func (r *RootResolver) CreateProductInShop(ctx context.Context, params createProductInShopParams) (*Product, error) {
-	return nil, nil
+	dataService := dataServiceFromContext(ctx)
+	productModel := dataService.CreateProductInShop(string(params.ShopID), params.ProductName, int(params.Dollars), int(params.Cents))
+	return productModelToGraphQL(dataService, productModel), nil
 }
 
 type createOrderInShopParams struct {
@@ -30,15 +34,19 @@ type createOrderInShopParams struct {
 }
 
 func (r *RootResolver) CreateOrderInShop(ctx context.Context, params createOrderInShopParams) (*Order, error) {
-	return nil, nil
+	dataService := dataServiceFromContext(ctx)
+	orderModel := dataService.CreateOrderInShop(string(params.ShopID))
+	return orderModelToGraphQL(dataService, orderModel), nil
 }
 
 type addProductToOrderParams struct {
-	ShopID    graphql.ID
+	OrderID   graphql.ID
 	ProductID graphql.ID
 	HowMany   int32
 }
 
 func (r *RootResolver) AddProductToOrder(ctx context.Context, params addProductToOrderParams) (*LineItem, error) {
-	return nil, nil
+	dataService := dataServiceFromContext(ctx)
+	lineItemModel := dataService.AddProductToOrder(string(params.OrderID), string(params.ProductID), int(params.HowMany))
+	return lineItemModelToGraphQL(dataService, lineItemModel), nil
 }
