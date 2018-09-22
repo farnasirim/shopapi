@@ -26,5 +26,7 @@ type shopParams struct {
 }
 
 func (r *RootResolver) ShopByName(ctx context.Context, params shopParams) (*Shop, error) {
-	return nil, nil
+	dataService := dataServiceFromContext(ctx)
+	shop := dataService.ShopByName(params.ShopName)
+	return shopModelToGraphQL(dataService, shop), nil
 }

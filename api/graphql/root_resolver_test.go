@@ -41,3 +41,30 @@ func TestShops(t *testing.T) {
 	assert.Equal(t, nil, err, "retrieve the name without error")
 	assert.Equal(t, "some-shop", returnedShopName, "with the name of some-shop")
 }
+
+func TestShop(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDataService := mock.NewMockDataService(ctrl)
+
+	shop1 := mock.NewMockShop(ctrl)
+	shop1.EXPECT().Name().Return("some-shop")
+	shop1.EXPECT().ID().Return("some-id")
+
+	mockDataService.EXPECT().ShopByName("some-shop").Return(shop1).Times(1)
+	mockDataService.EXPECT().ShopByID("some-id").Return(shop1).Times(1)
+
+	rootResolver := &RootResolver{}
+
+	backgroundContext := context.Background()
+	contextWithDataService := context.WithValue(backgroundContext, shopapi.DataServiceStr, mockDataService)
+
+	shop, err := rootResolver.ShopByName(contextWithDataService, shopParams{ShopName: "some-shop"})
+
+	assert.Equal(t, nil, err, "retrieve without error")
+
+	returnedShopName, err := shop.Name()
+	assert.Equal(t, nil, err, "retrieve the name without error")
+	assert.Equal(t, "some-shop", returnedShopName, "with the name of some-shop")
+}
