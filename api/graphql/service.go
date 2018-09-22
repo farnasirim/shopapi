@@ -1,6 +1,7 @@
 package graphql
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/farnasirim/shopapi"
@@ -21,10 +22,32 @@ func NewGrpahqlService(dataService shopapi.DataService) *GraphqlService {
 	// supplied schema. Therefore we make sure we're only allowing for our own.
 	schema := Schema()
 	rootResolver := &RootResolver{}
+
+	originalHandler := &relay.Handler{
+		Schema: graphql.MustParseSchema(schema, rootResolver),
+	}
+
+	wrappedHandler := &ContextWrapperHandler{
+		handlerFunc: func(w http.ResponseWriter, r *http.Request) {
+
+			contextWithDataService := context.WithValue(r.Context(), shopapi.DataServiceStr, dataService)
+			r.WithContext(contextWithDataService)
+			originalHandler.ServeHTTP(w, r)
+		},
+	}
+
 	serviceToReturn := &GraphqlService{
 		dataService:        dataService,
-		GraphqlHTTPHandler: &relay.Handler{Schema: graphql.MustParseSchema(schema, rootResolver)},
+		GraphqlHTTPHandler: wrappedHandler,
 	}
 
 	return serviceToReturn
+}
+
+type ContextWrapperHandler struct {
+	handlerFunc http.HandlerFunc
+}
+
+func (h *ContextWrapperHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	h.handlerFunc(w, r)
 }

@@ -8,7 +8,9 @@ schema {
 
 type Query {
 	shops: [Shop!]!
-	shop(shopID: ID!): Shop!
+	shopByName(shopName: String!): Shop!
+	# Maybe later on shopByID, productByID, etc.
+	
 }
 
 type Mutation {
@@ -32,6 +34,7 @@ type Mutation {
 }
 
 type Shop {
+	id: ID!
 	name: String!
 	products: [Product!]!
 	orders: [Order!]!
@@ -40,6 +43,7 @@ type Shop {
 }
 
 type Product {
+	id: ID!
 	name: String!
 	linesInOrders: [LineItem!]!
 	price: DollarValue!
@@ -48,6 +52,7 @@ type Product {
 }
 
 type Order {
+	id: ID!
 	lines: [LineItem!]!
 	price: DollarValue!
 }
@@ -58,6 +63,7 @@ type Order {
 #   '1x loaf of bread - $3.00' and
 #   '1x carton of milk - $2.00'
 type LineItem {
+	id: ID!
 	# The corresponding product of the line item
 	# Can be unioned with a Service type for shipping etc.
 	product: Product!

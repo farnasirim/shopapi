@@ -3,3 +3,4 @@
 NetrwTreeListing*
 /shopapi
 /api/graphql/bindata.go
+/mock/mock.go

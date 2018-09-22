@@ -9,7 +9,7 @@ Simple shop api for Shopify internship assignment.
 To build and run the project:
 ```
 make dependencies
-make gobindata
+make generate 
 make shopapi
 ./shopapi serve --address=0.0.0.0:8000
 ```

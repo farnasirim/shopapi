@@ -21,8 +21,14 @@ help:
 shopapi: *.go */*/*.go gobindata
 	$(GO) build -o="shopapi" -ldflags="$(LD_FLAGS)" $(TARGET)
 
-gobindata: api/graphql/schema.graphql
+generate: schema mocks
+
+schema: api/graphql/schema.graphql
 	$(GO) generate api/graphql/schema.go
+
+mocks: shopapi.go
+	$(GO) generate shopapi.go
+
 
 docker: shopapi 
 	$(DOCKER) build -t $(IMAGE_NAME):$(IMAGE_VERSION) .

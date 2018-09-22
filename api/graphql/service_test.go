@@ -6,7 +6,7 @@ import (
 )
 
 func TestCreateGraphqlService(t *testing.T) {
-	graphqlService := NewGrpahqlService(&struct{}{})
+	graphqlService := NewGrpahqlService(nil)
 	server := httptest.NewServer(graphqlService.GraphqlHTTPHandler)
 
 	defer server.Close()

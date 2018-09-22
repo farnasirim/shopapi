@@ -2,8 +2,15 @@ package graphql
 
 import (
 	"context"
-	//graphql "github.com/graph-gophers/graphql-go"
+
+	graphql "github.com/graph-gophers/graphql-go"
+
+	"github.com/farnasirim/shopapi"
 )
+
+func productModelToGraphQL(shopapi.Product) *Product {
+	return nil
+}
 
 type Product struct {
 }
@@ -21,5 +28,9 @@ func (p *Product) TotalSold() (*DollarValue, error) {
 }
 
 func (p *Product) Name() (string, error) {
+	return "", nil
+}
+
+func (p *Product) ID() (graphql.ID, error) {
 	return "", nil
 }
