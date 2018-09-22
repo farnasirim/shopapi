@@ -45,10 +45,7 @@ type Shop {
 type Product {
 	id: ID!
 	name: String!
-	linesInOrders: [LineItem!]!
 	price: DollarValue!
-
-	totalSold: DollarValue!
 }
 
 type Order {

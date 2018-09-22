@@ -28,15 +28,29 @@ type productsParams struct {
 }
 
 func (s *Shop) Products(ctx context.Context) ([]*Product, error) {
-	return nil, nil
+	productsModels := s.Underlaying().Products()
+	retProducts := make([]*Product, 0)
+	for _, productModel := range productsModels {
+		retProducts = append(retProducts, productModelToGraphQL(s.dataService, productModel))
+	}
+
+	return retProducts, nil
 }
 
 func (s *Shop) Orders(ctx context.Context) ([]*Order, error) {
-	return nil, nil
+	ordersModels := s.Underlaying().Orders()
+	retOrders := make([]*Order, 0)
+
+	for _, orderModel := range ordersModels {
+		retOrders = append(retOrders, orderModelToGraphQL(s.dataService, orderModel))
+	}
+
+	return retOrders, nil
 }
 
 func (s *Shop) TotalSales(ctx context.Context) (*DollarValue, error) {
-	return nil, nil
+	dollarValueModel := s.Underlaying().TotalSales()
+	return dollarValueModelToGraphQL(dollarValueModel), nil
 }
 
 func (s *Shop) Name() (string, error) {

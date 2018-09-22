@@ -8,25 +8,41 @@ import (
 	"github.com/farnasirim/shopapi"
 )
 
-func LineItemModelToGraphQL(shopapi.LineItem) *LineItem {
-	return nil
+func lineItemModelToGraphQL(dataService shopapi.DataService, lineItem shopapi.LineItem) *LineItem {
+	return NewLineItem(dataService, lineItem.ID(), lineItem.ProductID(),
+		lineItem.Quantity(), dollarValueModelToGraphQL(lineItem.Price()))
 }
 
 type LineItem struct {
+	id          graphql.ID
+	dataService shopapi.DataService
+	productID   string
+	quantity    int
+	price       *DollarValue
+}
+
+func NewLineItem(dataService shopapi.DataService, id string, productID string, quantity int, price *DollarValue) *LineItem {
+	return &LineItem{
+		dataService: dataService,
+		id:          graphql.ID(id),
+		productID:   productID,
+		quantity:    quantity,
+		price:       price,
+	}
 }
 
 func (l *LineItem) Product() (*Product, error) {
-	return nil, nil
+	return productModelToGraphQL(l.dataService, l.dataService.ProductByID(l.productID)), nil
 }
 
 func (l *LineItem) Quantity() (int32, error) {
-	return 0, nil
+	return int32(l.quantity), nil
 }
 
 func (l *LineItem) Price() (*DollarValue, error) {
-	return nil, nil
+	return l.price, nil
 }
 
 func (l *LineItem) ID() (graphql.ID, error) {
-	return "", nil
+	return l.id, nil
 }
