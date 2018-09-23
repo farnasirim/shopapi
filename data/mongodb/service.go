@@ -6,8 +6,13 @@ import (
 
 	"github.com/farnasirim/shopapi"
 
+	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/bson/objectid"
 	"github.com/mongodb/mongo-go-driver/mongo"
+)
+
+var (
+	idField string = "_id"
 )
 
 type MongodbService struct {
@@ -39,7 +44,15 @@ func (s *MongodbService) Shops() []shopapi.Shop {
 }
 
 func (s *MongodbService) ShopByName(name string) shopapi.Shop {
-	return nil
+	shop := &shopBson{}
+	query := bson.NewDocument(bson.EC.String(shopNameField, name))
+	err := s.db.Collection(shopCollectionName).FindOne(context.Background(), query).Decode(shop)
+	if err != nil {
+		// FIXME handle and propagate error correctly
+		log.Fatalln(err.Error())
+	}
+
+	return NewShop(s, shop.ID.Hex(), shop.Name)
 }
 
 func (s *MongodbService) ShopByID(id string) shopapi.Shop {
@@ -51,13 +64,13 @@ func (s *MongodbService) ProductByID(id string) shopapi.Product {
 	return nil
 }
 
-func (s *MongodbService) ShopOrderByID(shopID, orderID string) shopapi.Order {
+func (s *MongodbService) OrderByID(shopID, orderID string) shopapi.Order {
 
 	return nil
 }
 
 func (s *MongodbService) NewShop(name string) shopapi.Shop {
-	insertResult, err := s.db.Collection(ShopCollectionName).InsertOne(context.Background(), map[string]string{ShopNameField: name})
+	insertResult, err := s.db.Collection(shopCollectionName).InsertOne(context.Background(), map[string]string{shopNameField: name})
 	if err != nil {
 		// FIXME: handle the error correctly!
 		log.Fatalln(err.Error())

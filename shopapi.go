@@ -45,7 +45,7 @@ type DataService interface {
 
 	ProductByID(id string) Product
 
-	ShopOrderByID(shopID, orderID string) Order
+	OrderByID(orderID string) Order
 
 	NewShop(name string) Shop
 	CreateProductInShop(shopID, productName string, dollars, cents int) Product

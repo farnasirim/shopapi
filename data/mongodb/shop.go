@@ -2,13 +2,20 @@ package mongodb
 
 import (
 	"github.com/farnasirim/shopapi"
+
+	"github.com/mongodb/mongo-go-driver/bson/objectid"
 )
 
 var (
-	ShopCollectionName = "shops"
+	shopCollectionName = "shops"
 
-	ShopNameField = "name"
+	shopNameField = "name"
 )
+
+type shopBson struct {
+	ID   objectid.ObjectID `bson:"_id"`
+	Name string            `bson:"name"`
+}
 
 type Shop struct {
 	mongodbService *MongodbService
