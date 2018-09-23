@@ -57,3 +57,4 @@ Anything in the data modeling (keep prices precalculated or do it on the fly, re
 
 - Add createdAt, updatedAt
 - IMPORTANT: Add error return argument to data service functions (errors are currently silent, which makes "print debugging" impossible)
+- May need to use DBRef in LineItem since things such as tax or services maybe added. And they could be things other than Product objects and not be present in the products collection.

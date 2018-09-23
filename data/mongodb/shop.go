@@ -13,7 +13,7 @@ var (
 )
 
 type shopBson struct {
-	ID   objectid.ObjectID `bson:"_id"`
+	ID   objectid.ObjectID `bson:"_id,omitempty"`
 	Name string            `bson:"name"`
 }
 
@@ -21,6 +21,10 @@ type Shop struct {
 	mongodbService *MongodbService
 	id             string
 	name           string
+}
+
+func NewShopFromBson(mongodbService *MongodbService, shop *shopBson) *Shop {
+	return NewShop(mongodbService, shop.ID.Hex(), shop.Name)
 }
 
 func NewShop(mongodbService *MongodbService, id, name string) *Shop {
