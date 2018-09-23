@@ -27,15 +27,18 @@ Also I think `mongodb` will go much better with `graphql` than any relational db
 
 For anything related to data as sensitive as payments though I would still stick to a more reliable dbms in terms of Consistency.
 
-I have decided to store all the data in a single shops collection, since accessing/creating products, orders, and line items outside of the context of a shop would be meaningless. If that were to be the case though, depending on the usage I would either duplicate all the products to another products collection too, or just created a products collection without duplicating everything under the corresponding shop item.
+Changed my mind. See below.
+~~I have decided to store all the data in a single shops collection, since accessing/creating products, orders, and line items outside of the context of a shop would be meaningless. If that were to be the case though, depending on the usage I would either duplicate all the products to another products collection too, or just created a products collection without duplicating everything under the corresponding shop item.~~
 
-Also for the line items, I have decided to again keep them under the orders (which are themselves kept inside shops) since line items would be meaningless without an order. Inside the line items I will duplicate the "important" fields of product (which is pretty much everything now: name and dollar value) but will also keep a reference to the actual Product. This has implications which may or may not be wanted:
-- "Freezing" the state of a product by adding it to a shopping cart (well, it's order right now, but shopping cart can make it worse) and not finalizing the cart, will keep an old "version" of a product in the system.
-- On the other hand when querying the orders in the past, one would probably like expect the names and prices to be as they were at the time of the order. At worst the client can look up the product reference from each line item to find the current price/name/etc.
+~~Also for the line items, I have decided to again keep them under the orders (which are themselves kept inside shops) since line items would be meaningless without an order. Inside the line items I will duplicate the "important" fields of product (which is pretty much everything now: name and dollar value) but will also keep a reference to the actual Product. This has implications which may or may not be wanted:~~
+- ~~"Freezing" the state of a product by adding it to a shopping cart (well, it's order right now, but shopping cart can make it worse) and not finalizing the cart, will keep an old "version" of a product in the system.~~
+- ~~On the other hand when querying the orders in the past, one would probably like expect the names and prices to be as they were at the time of the order. At worst the client can look up the product reference from each line item to find the current price/name/etc.~~
 
-I believe we can come up with different solutions for issues similar to the first one and therefore find the first solution (not only keep the reference but also duplicate important data for calculations and business logic) better:
-1. It makes more sense logically
-2. When querying for anything that needs the whole order or an aggregation of it's products this will saves us a round trip to the db
+~~I believe we can come up with different solutions for issues similar to the first one and therefore find the first solution (not only keep the reference but also duplicate important data for calculations and business logic) better:~~
+1. ~~It makes more sense logically~~
+2. ~~When querying for anything that needs the whole order or an aggregation of it's products this will saves us a round trip to the db~~
+
+Considering the fact that the system is going to create a huge number of Orders, it's certainly bad to keep Order under Shop collection: access performance and later on archiving old orders to another data store, sharding, etc. I have decided to move Order outside, but still keep LineItems underneath orders since they don't make a lot of sense out of there. I am also separating out Product as a collection both because of easier access in terms of "only looking up a value from the db" which is a better practice (despite the extra round trip) and for the sake of similarity of design to Order.
 
 Anything in the data modeling (keep prices precalculated or do it on the fly, removing items from orders, indexes, etc.) can be discussed but I've decided to keep this document in a level higher than that.
 
