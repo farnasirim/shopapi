@@ -32,6 +32,7 @@ type LineItem interface {
 	OrderID() string
 	ProductName() string
 }
+
 type DollarValue interface {
 	Dollars() int
 	Cents() int
