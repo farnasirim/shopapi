@@ -54,3 +54,6 @@ Anything in the data modeling (keep prices precalculated or do it on the fly, re
     Maybe we should handoff the query optimization completely to the data service so that it could do all sorts of black magic (e.g. caching everything very close by - for example in process memory, making the data service stateful! Only for a a number of back and forth calls = about a second) in these scenarios.
 
 - Improve error propagation by doing sanity checks to return errors safely instead of panicking, or return the unnecessary errors one one-liners (specially in `api/graphql/*_resolver.go`)
+
+- Add createdAt, updatedAt
+- IMPORTANT: Add error return argument to data service functions (errors are currently silent, which makes "print debugging" impossible)

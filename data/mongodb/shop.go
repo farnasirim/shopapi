@@ -4,17 +4,32 @@ import (
 	"github.com/farnasirim/shopapi"
 )
 
+var (
+	ShopCollectionName = "shops"
+
+	ShopNameField = "name"
+)
+
 type Shop struct {
+	mongodbService *MongodbService
+	id             string
+	name           string
+}
+
+func NewShop(mongodbService *MongodbService, id, name string) *Shop {
+	return &Shop{
+		mongodbService: mongodbService,
+		id:             id,
+		name:           name,
+	}
 }
 
 func (s *Shop) ID() string {
-
-	return ""
+	return s.id
 }
 
 func (s *Shop) Name() string {
-
-	return ""
+	return s.name
 }
 
 func (s *Shop) Products() []shopapi.Product {

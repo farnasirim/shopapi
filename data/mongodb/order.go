@@ -4,6 +4,10 @@ import (
 	"github.com/farnasirim/shopapi"
 )
 
+var (
+	OrderCollectionName = "orders"
+)
+
 type Order struct {
 }
 
