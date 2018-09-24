@@ -6,6 +6,11 @@ Simple shop api for Shopify internship assignment.
 [here](docs/README.md)
 
 ## How to use
+To quickly test things out go to [https://farnasirim.ir/debug/](https://farnasirim.ir/debug/)
+The docker image is running on kubernetes on [http://35.229.101.218/debug](http://35.229.101.218/debug) and another server is proxying the `https` requests to the kubernetes cluster.
+
+This project is written in `go`. Make sure `$GOPATH` is set and this project is in the correct path, which is `$GOPATH/src/github.com/farnasirim/shopapi`. 
+
 To build the project:
 ```
 make dependencies
