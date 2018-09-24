@@ -26,19 +26,17 @@ func NewGrpahqlService(dataService shopapi.DataService) *GraphqlService {
 	originalHandler := &relay.Handler{
 		Schema: graphql.MustParseSchema(schema, rootResolver),
 	}
-
-	wrappedHandler := &ContextWrapperHandler{
-		handlerFunc: func(w http.ResponseWriter, r *http.Request) {
-
-			contextWithDataService := context.WithValue(r.Context(), shopapi.DataServiceStr, dataService)
-			r.WithContext(contextWithDataService)
-			originalHandler.ServeHTTP(w, r)
-		},
+	serviceToReturn := &GraphqlService{
+		dataService: dataService,
 	}
 
-	serviceToReturn := &GraphqlService{
-		dataService:        dataService,
-		GraphqlHTTPHandler: wrappedHandler,
+	serviceToReturn.GraphqlHTTPHandler = &ContextWrapperHandler{
+		handlerFunc: func(w http.ResponseWriter, r *http.Request) {
+			contextWithDataService := context.WithValue(r.Context(), shopapi.DataServiceStr, serviceToReturn.dataService)
+			contextWithDataService = context.WithValue(contextWithDataService, "a", "b")
+
+			originalHandler.ServeHTTP(w, r.WithContext(contextWithDataService))
+		},
 	}
 
 	return serviceToReturn
