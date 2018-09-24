@@ -7,7 +7,8 @@ import (
 )
 
 func productModelToGraphQL(dataService shopapi.DataService, product shopapi.Product) *Product {
-	return nil
+	return NewProduct(dataService, product.ID(), product.Name(), product.ShopID(),
+		NewDollarValue(product.Price().Dollars(), product.Price().Cents()))
 }
 
 type Product struct {

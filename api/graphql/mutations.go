@@ -26,7 +26,8 @@ type createProductInShopParams struct {
 func (r *RootResolver) CreateProductInShop(ctx context.Context, params createProductInShopParams) (*Product, error) {
 	dataService := dataServiceFromContext(ctx)
 	productModel := dataService.CreateProductInShop(string(params.ShopID), params.ProductName, int(params.Dollars), int(params.Cents))
-	return productModelToGraphQL(dataService, productModel), nil
+	graphqlProduct := productModelToGraphQL(dataService, productModel)
+	return graphqlProduct, nil
 }
 
 type createOrderInShopParams struct {
