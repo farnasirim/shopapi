@@ -6,8 +6,11 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/gorilla/mux"
+
 	"github.com/farnasirim/shopapi/api/graphql"
 	"github.com/farnasirim/shopapi/data/mongodb"
+	shopapihttp "github.com/farnasirim/shopapi/http"
 )
 
 var (
@@ -41,7 +44,12 @@ var serveCmd = &cobra.Command{
 		mongodbService := mongodb.NewMongodbService(mongodbConnectionString, mongodbDatabaseName)
 		graphqlService := graphql.NewGrpahqlService(mongodbService)
 
-		http.ListenAndServe(serveAddress, graphqlService.GraphqlHTTPHandler)
+		router := mux.NewRouter()
+
+		router.Handle("/api", graphqlService.GraphqlHTTPHandler)
+		router.Handle("/debug", shopapihttp.NewDebugClient())
+
+		http.ListenAndServe(serveAddress, router)
 	},
 }
 
