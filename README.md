@@ -23,6 +23,12 @@ And to Run it:
 ./shopapi serve --address=localhost:8080 --initdb --mongodb-uri mongodb://localhost:27017 --dbname shopapidb
 ```
 
+Or use the lightweight docker image:
+```bash
+docker run -p 8080:8080 --name my-shopapi colonelmo/shopapi serve --address=0.0.0.0:8080 --initdb --mongodb-uri mongodb://$MONGO_HOST:27017 --dbname shopapidb
+```
+where `MONGO_HOST` is the IP of the machine where mongodb is running. Don't forget to expose mongodb to local ip (instead of `127.0.0.1`) if you're using this method alongside a dockerized mongodb.
+
 The api will be at `/api`
 
 There is very little error handling done in the db layer, so by issuing queries that point to an object that is not there, the server will crash. This is unlikely to happen in a normal usage but a temporary solution is here if this bothers you.
