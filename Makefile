@@ -18,7 +18,7 @@ help:
 	@echo "  test to run tests"
 	@echo "  clean to remove generated files"
 
-shopapi: *.go */*/*.go gobindata
+shopapi: *.go */*/*.go generate
 	$(GO) build -o="shopapi" -ldflags="$(LD_FLAGS)" $(TARGET)
 
 generate: schema mocks
