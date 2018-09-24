@@ -42,6 +42,25 @@ var serveCmd = &cobra.Command{
 		log.Println("mongodb database name:", mongodbDatabaseName)
 
 		mongodbService := mongodb.NewMongodbService(mongodbConnectionString, mongodbDatabaseName)
+
+		if initDB && len(mongodbService.Shops()) == 0 {
+			apple := mongodbService.NewShop("apple")
+			iphoneX := mongodbService.CreateProductInShop(apple.ID(), "iphone X", 999, 99)
+			ipad := mongodbService.CreateProductInShop(apple.ID(), "ipad", 665, 50)
+
+			samsung := mongodbService.NewShop("samsung")
+			galaxyA5 := mongodbService.CreateProductInShop(samsung.ID(), "galaxy A5", 700, 20)
+			_ = mongodbService.CreateProductInShop(samsung.ID(), "note", 600, 30)
+
+			orderInApple := mongodbService.CreateOrderInShop(apple.ID())
+			mongodbService.AddProductToOrder(orderInApple.ID(), iphoneX.ID(), 2)
+			mongodbService.AddProductToOrder(orderInApple.ID(), ipad.ID(), 2)
+
+			orderInSamsung := mongodbService.CreateOrderInShop(samsung.ID())
+			mongodbService.AddProductToOrder(orderInSamsung.ID(), galaxyA5.ID(), 1)
+			mongodbService.AddProductToOrder(orderInSamsung.ID(), galaxyA5.ID(), 1)
+		}
+
 		graphqlService := graphql.NewGrpahqlService(mongodbService)
 
 		router := mux.NewRouter()
