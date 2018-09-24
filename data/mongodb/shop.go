@@ -44,13 +44,26 @@ func (s *Shop) Name() string {
 }
 
 func (s *Shop) Products() []shopapi.Product {
-	return nil
+	shopProducts := s.mongodbService.shopProducts(s.id)
+	ret := make([]shopapi.Product, 0)
+
+	for _, prod := range shopProducts {
+		ret = append(ret, prod)
+	}
+
+	return ret
 }
 
 func (s *Shop) Orders() []shopapi.Order {
-	return nil
+	ordersOfShop := s.mongodbService.ordersOfShop(s.id)
+	ret := make([]shopapi.Order, 0)
+	for _, order := range ordersOfShop {
+		ret = append(ret, order)
+	}
+
+	return ret
 }
 
 func (s *Shop) TotalSales() shopapi.DollarValue {
-	return nil
+	return s.mongodbService.totalShopSales(s.id)
 }
